@@ -471,7 +471,7 @@ class Zone(object):
                     for rdata in rds:
                         yield (name, rds.ttl, rdata)
 
-    def to_file(self, f, sorted=True, relativize=True, nl=None):
+    def to_file(self, f, sorted=True, relativize=True, nl=None, include_comments=False):
         """Write a zone to a file.
 
         @param f: file or string.  If I{f} is a string, it is treated
@@ -487,6 +487,8 @@ class Zone(object):
         output will use the platform's native end-of-line marker (i.e.
         LF on POSIX, CRLF on Windows, CR on Macintosh).
         @type nl: string or None
+        @param include_comments: True if comments should be included
+        @type include_comments: bool
         """
 
         str_type = string_types
@@ -509,7 +511,8 @@ class Zone(object):
                 names = self.iterkeys()
             for n in names:
                 l = self[n].to_text(n, origin=self.origin,
-                                    relativize=relativize)
+                                    relativize=relativize,
+                                    include_comments=include_comments)
                 if isinstance(l, text_type):
                     l = l.encode()
                 if nl is None:
@@ -522,7 +525,7 @@ class Zone(object):
             if want_close:
                 f.close()
 
-    def to_text(self, sorted=True, relativize=True, nl=None):
+    def to_text(self, sorted=True, relativize=True, nl=None, include_comments=False):
         """Return a zone's text as though it were written to a file.
 
         @param sorted: if True, the file will be written with the
@@ -536,9 +539,11 @@ class Zone(object):
         output will use the platform's native end-of-line marker (i.e.
         LF on POSIX, CRLF on Windows, CR on Macintosh).
         @type nl: string or None
+        @param include_comments: True if comments should be included
+        @type include_comments: bool
         """
         temp_buffer = BytesIO()
-        self.to_file(temp_buffer, sorted, relativize, nl)
+        self.to_file(temp_buffer, sorted, relativize, nl, include_comments)
         return_value = temp_buffer.getvalue()
         temp_buffer.close()
         return return_value

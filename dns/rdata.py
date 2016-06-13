@@ -122,18 +122,21 @@ class Rdata(object):
     """Base class for all DNS rdata types.
     """
 
-    __slots__ = ['rdclass', 'rdtype']
+    __slots__ = ['rdclass', 'rdtype', 'comment']
 
-    def __init__(self, rdclass, rdtype):
+    def __init__(self, rdclass, rdtype, comment=None):
         """Initialize an rdata.
         @param rdclass: The rdata class
         @type rdclass: int
         @param rdtype: The rdata type
         @type rdtype: int
+        @param comment: A comment associated with the record
+        @type comment: string
         """
 
         self.rdclass = rdclass
         self.rdtype = rdtype
+        self.comment = comment
 
     def covers(self):
         """DNS SIG/RRSIG rdatas apply to a specific type; this type is
